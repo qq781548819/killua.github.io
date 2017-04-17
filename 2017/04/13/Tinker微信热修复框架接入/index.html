@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Tinker微信热修复框架接入 | 闻道者|朝生夕死 | 记忆是掌心的水，不论你摊开还是握紧，终究还是会从指缝中一滴一滴流淌干净。只是，那水的凉意，却是可以让人始终无法忘记！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="Android关于微信开源Tinker热修复接入
+现在android开发百花齐放，各种技术栈层出不穷，生机勃勃。强大的开源社区，那些巨人们简直不能再帅，好好学习，共勉！
+
+简单收集了关于android热修复方案各大厂、牛人开源的方案。
+关于热修复原理可以参考：
+
+QQ空间终端开发团队 安卓App热补丁动态修复技术介绍
+Alibaba-AndFix Bug热修复框架原理及源码解析
+Android热更">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tinker微信热修复框架接入">
+<meta property="og:url" content="http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/index.html">
+<meta property="og:site_name" content="闻道者|朝生夕死">
+<meta property="og:description" content="Android关于微信开源Tinker热修复接入
+现在android开发百花齐放，各种技术栈层出不穷，生机勃勃。强大的开源社区，那些巨人们简直不能再帅，好好学习，共勉！
+
+简单收集了关于android热修复方案各大厂、牛人开源的方案。
+关于热修复原理可以参考：
+
+QQ空间终端开发团队 安卓App热补丁动态修复技术介绍
+Alibaba-AndFix Bug热修复框架原理及源码解析
+Android热更">
+<meta property="og:updated_time" content="2017-04-13T07:44:12.475Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tinker微信热修复框架接入">
+<meta name="twitter:description" content="Android关于微信开源Tinker热修复接入
+现在android开发百花齐放，各种技术栈层出不穷，生机勃勃。强大的开源社区，那些巨人们简直不能再帅，好好学习，共勉！
+
+简单收集了关于android热修复方案各大厂、牛人开源的方案。
+关于热修复原理可以参考：
+
+QQ空间终端开发团队 安卓App热补丁动态修复技术介绍
+Alibaba-AndFix Bug热修复框架原理及源码解析
+Android热更">
+    
+        <link rel="alternate" type="application/atom+xml" title="闻道者|朝生夕死" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@1.6.1/css/style.css">
+    <script>window.lazyScripts=[]</script>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://wx.qlogo.cn/mmopen/gFTv7sFnt1B2K3XeIib3yvnW73HqmFrlpYwibkQGYUrF9qj14I0Xvt0pjjm1pbRLx5dYQHcUkEQ9h6Z3x7Cl5NmjTupHxaUPMD/0">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">赖坤奇</h5>
+          <a href="mailto:781548819@qq.com" title="781548819@qq.com" class="mail">781548819@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/qq781548819" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Tinker微信热修复框架接入</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Tinker微信热修复框架接入</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-04-13T06:09:04.000Z" itemprop="datePublished" class="page-time">
+  2017-04-13
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Android关于微信开源Tinker热修复接入"><span class="post-toc-number">1.</span> <span class="post-toc-text">Android关于微信开源Tinker热修复接入</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#本文介绍接入腾讯Tinker并实现运营期间下发patch实现修复"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">本文介绍接入腾讯Tinker并实现运营期间下发patch实现修复</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-Tinker微信热修复框架接入"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Tinker微信热修复框架接入</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-04-13 14:09:04" datetime="2017-04-13T06:09:04.000Z"  itemprop="datePublished">2017-04-13</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Android关于微信开源Tinker热修复接入"><a href="#Android关于微信开源Tinker热修复接入" class="headerlink" title="Android关于微信开源Tinker热修复接入"></a>Android关于微信开源Tinker热修复接入</h2><blockquote>
+<p>现在android开发百花齐放，各种技术栈层出不穷，生机勃勃。强大的开源社区，那些巨人们简直不能再帅，好好学习，共勉！</p>
+</blockquote>
+<p>简单收集了关于android热修复方案各大厂、牛人开源的方案。</p>
+<p>关于热修复原理可以参考：</p>
+<blockquote>
+<p><a href="https://zhuanlan.zhihu.com/&gt;p/20308548?columnSlug=magilu" target="_blank" rel="external">QQ空间终端开发团队 安卓App热补丁动态修复技术介绍</a></p>
+<p><a href="http://&gt;blog.csdn.net/qxs965266509/article/details/49816007" target="_blank" rel="external">Alibaba-AndFix Bug热修复框架原理及源码解析</a></p>
+<p><a href="http://tech.meituan.com/android_robust.html" target="_blank" rel="external">Android热更新方案Robust</a></p>
+</blockquote>
+<ol>
+<li><a href="https://github.com/jasonross/Nuwa" target="_blank" rel="external">Nuwa</a></li>
+<li><a href="https://github.com/alibaba/AndFix" target="_blank" rel="external">AndFix</a></li>
+<li><a href="https://github.com/Tencent/tinker" target="_blank" rel="external">Tinker</a></li>
+<li><a href="https://github.com/Meituan-Dianping/Robust" target="_blank" rel="external">Robust</a></li>
+</ol>
+<p>这方面的框架还有很多，列举了几个比较优秀的供小伙伴们参考；由于水平有限，深入理解请根据源码和作者文档了解学习。</p>
+<h3 id="本文介绍接入腾讯Tinker并实现运营期间下发patch实现修复"><a href="#本文介绍接入腾讯Tinker并实现运营期间下发patch实现修复" class="headerlink" title="本文介绍接入腾讯Tinker并实现运营期间下发patch实现修复"></a>本文介绍接入腾讯Tinker并实现运营期间下发patch实现修复</h3><p>目前接入tinker的方式有4种，<a href="https://github.com/Tencent/tinker/wiki/Tinker-%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97" target="_blank" rel="external">Tinker-接入指南</a></p>
+<ol>
+<li>github wiki中推荐gradle接入<blockquote>
+<p>gradle是推荐的接入方式，在gradle插件tinker-patch-gradle-<br>plugin中我们帮你完成proguard、multiDex以及Manifest处理等工<br>作。</p>
+</blockquote>
+</li>
+<li>命令行接入<blockquote>
+<p>命令行工具tinker-patch-cli.jar提供了基准包与新安装包做差异，<br>生成补丁包的功能。具体的命令参数如下:</p>
+</blockquote>
+</li>
+<li>TinkerPatch补丁管理后台<blockquote>
+<p><a href="http://www.tinkerpatch.com/" target="_blank" rel="external">www.tinkerpatch.com</a> 是第三<br>方开发基于CDN分发的补丁管理后台。它提供了脚本后台托管，版本管<br>理，保证传输安全等功能，让你无需搭建一个后台，无需关心部署操作，<br>只需引入一个 SDK 即可立即使用 Tinker。<br>该平台是第三方搭建，有付费渠道</p>
+</blockquote>
+</li>
+<li>腾讯bugly新版集成了Tinker热修复<blockquote>
+<p>热更新能力是Bugly为解决开发者紧急修复线上bug，而无需重新发版让<br>用户无感知就能把问题修复的一项能力。Bugly目前采用微信Tinker的开<br>源方案，开发者只需要集成我们提供的SDK就可以实现自动下载补丁包、<br>合成、并应用补丁的功能，我们也提供了热更新管理后台让开发者对每个<br>版本补丁进行管理。</p>
+</blockquote>
+</li>
+</ol>
+<p>公司一开始就是用的腾讯Bugly，异常上报和运营统计。最重要的是免费，还推出后台下发patch，免掉公司服务器端自建的成本开销。大赞！</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2017-04-13T07:44:12.475Z" itemprop="dateUpdated">2017-04-13 15:44:12</time>
+</span><br>
+
+
+        这里写留言或版权声明：<a href="/2017/04/13/Tinker微信热修复框架接入/" target="_blank" rel="external">http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/</a>
+    </div>
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="http://wx.qlogo.cn/mmopen/gFTv7sFnt1B2K3XeIib3yvnW73HqmFrlpYwibkQGYUrF9qj14I0Xvt0pjjm1pbRLx5dYQHcUkEQ9h6Z3x7Cl5NmjTupHxaUPMD/0" alt="赖坤奇">
+            赖坤奇
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/&title=《Tinker微信热修复框架接入》 — 闻道者|朝生夕死&pic=http://wx.qlogo.cn/mmopen/gFTv7sFnt1B2K3XeIib3yvnW73HqmFrlpYwibkQGYUrF9qj14I0Xvt0pjjm1pbRLx5dYQHcUkEQ9h6Z3x7Cl5NmjTupHxaUPMD/0" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/&title=《Tinker微信热修复框架接入》 — 闻道者|朝生夕死&source=碧血长枪，昨日少年！" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Tinker微信热修复框架接入》 — 闻道者|朝生夕死&url=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/03/16/HelloWorld-关于转载郭林大神的android微状态栏视觉效果技术分享/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">HelloWorld_关于转载郭林大神的android微状态栏视觉效果技术分享</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+<div class="comments" id="comments">
+    <div class="ds-thread" data-thread-key="Tinker微信热修复框架接入" data-title="Tinker微信热修复框架接入" data-url="http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/"></div>
+</div>
+<script>
+lazyScripts.push('//cdn.bootcss.com/marked/0.3.6/marked.min.js');
+
+var duoshuoQuery = {short_name:'ysblog', theme: 'none'};
+lazyScripts.push('//unpkg.com/hexo-theme-material-indigo@1.6.1/js/embed.min.js');
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <ul class="reward-items">
+        
+        <li>
+            <img src="/img/wechat.png" title="微信打赏二维码" alt="微信打赏二维码">
+            <p>微信</p>
+        </li>
+        
+
+        
+        <li>
+            <img src="/img/alipay.jpg" title="支付宝打赏二维码" alt="支付宝打赏二维码">
+            <p>支付宝</p>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+</div>
+
+        <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></span>
+            <span>赖坤奇 &copy; 2017</span>
+			<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+	   </p>
+		
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/&title=《Tinker微信热修复框架接入》 — 闻道者|朝生夕死&pic=http://wx.qlogo.cn/mmopen/gFTv7sFnt1B2K3XeIib3yvnW73HqmFrlpYwibkQGYUrF9qj14I0Xvt0pjjm1pbRLx5dYQHcUkEQ9h6Z3x7Cl5NmjTupHxaUPMD/0" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/&title=《Tinker微信热修复框架接入》 — 闻道者|朝生夕死&source=碧血长枪，昨日少年！" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Tinker微信热修复框架接入》 — 闻道者|朝生夕死&url=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/04/13/Tinker微信热修复框架接入/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACwElEQVR42u3aQXLjMAwEwP3/p7NVe92SMgOQTg6tk8uxI7YOBDzgnz/x9fXven/99Pnkr/v/ubrw8PDwRkt/upLPvH/3//+Qr+Hpu/l98fDw8O7xkmKQvJNs/cldEnBUPPDw8PB+lJe3xe/F4P39tq3Hw8PD+/2899dJwWhjhY8WBjw8PLyYl7ewybaeBBOn1nAsa8HDw8OLeacGYJ98/QPzPTw8PLzRWOv9u3mbnrTIB8ZveHh4eBd47S3zowD5yP/UQaviFwMeHh7egpf/7G8D2U0AkT/Kb9aPh4eHd5mXb/qzh9ICNjEuHh4e3j1eu6zZ7dvjVrNB2mODjoeHh3eU18avCaONFfZRxWNggYeHh3eZ1zbBdf0p2+s2Pl4103h4eHhlwpC0y2cPYOVjrVkZw8PDw7vH2y8u38Q3eUkSi9QpCx4eHt6al++reaCwGvwHxaAoDHh4eHhHee8LSopBMciPh2ezlTweusLDw8M7xGt/9m828c+UnCjswMPDw1vz9kegijZ3lLjmBSyKJPDw8PAWvKT9zR9B/s4M0+YMeHh4eDd4s7SzLQlnC0kbneDh4eHd5s2OPSUxxCYpSUrF48PCw8PDu8bL29Z8426XMgsyvnnceHh4eNd4+ea+KRttJFGk0W3dw8PDw1vw3rf12fApP63QHjho14OHh4d3ltduuHlYMHsQScibD8bw8PDwPsNrQ9V2KNW2xW3EjIeHh3ebV4yR4gNSm4MFCb4d0eHh4eGd5X2VV95e55t+vtw6AsbDw8O7wDtcTwJGMkJLvnv42AEeHh5eyWuLwSy6TbbyPJjIx2l4eHh493hnN/f8UFe93PbwAR4eHt6P8k6No/akorHGw8PD+2W8pO0eLmsxfjtWGPDw8PBeebNwISkVsxZ8f6wBDw8P7x5vM9CalYRZ4NsGGXh4eHgXeH8BFXmcceEu9FAAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@1.6.1/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@1.6.1/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
