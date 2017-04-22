@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>记录一次当Fragment遇上ScrollView碰撞后的火花 | 闻道者|朝生夕死 | 记忆是掌心的水，不论你摊开还是握紧，终究还是会从指缝中一滴一滴流淌干净。只是，那水的凉意，却是可以让人始终无法忘记！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="android">
+    <meta name="description" content="最近做公司的跑腿项目，需要实现scrollView的滚动效果，印象中有弄过，直接使用
+1scrollView.smoothScrollTo(x,y);
+就可以实现，而只要获取scrollView中子控件对应的父视图的相对位置1childView.getTop();
+即可，在Android中获取手机屏幕的高度和宽度，我们知道在onCreate等方法中获取到的值都是为0的。
+据官网api介绍：
+
+an">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记录一次当Fragment遇上ScrollView碰撞后的火花">
+<meta property="og:url" content="http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/index.html">
+<meta property="og:site_name" content="闻道者|朝生夕死">
+<meta property="og:description" content="最近做公司的跑腿项目，需要实现scrollView的滚动效果，印象中有弄过，直接使用
+1scrollView.smoothScrollTo(x,y);
+就可以实现，而只要获取scrollView中子控件对应的父视图的相对位置1childView.getTop();
+即可，在Android中获取手机屏幕的高度和宽度，我们知道在onCreate等方法中获取到的值都是为0的。
+据官网api介绍：
+
+an">
+<meta property="og:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492863853500&di=add026d7c7011587e884aeabbbdf9f66&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201607%2F23%2F20160723114339_LAPaK.png">
+<meta property="og:updated_time" content="2017-04-22T10:11:41.492Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记录一次当Fragment遇上ScrollView碰撞后的火花">
+<meta name="twitter:description" content="最近做公司的跑腿项目，需要实现scrollView的滚动效果，印象中有弄过，直接使用
+1scrollView.smoothScrollTo(x,y);
+就可以实现，而只要获取scrollView中子控件对应的父视图的相对位置1childView.getTop();
+即可，在Android中获取手机屏幕的高度和宽度，我们知道在onCreate等方法中获取到的值都是为0的。
+据官网api介绍：
+
+an">
+<meta name="twitter:image" content="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492863853500&di=add026d7c7011587e884aeabbbdf9f66&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201607%2F23%2F20160723114339_LAPaK.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="闻道者|朝生夕死" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@1.6.1/css/style.css">
+    <script>window.lazyScripts=[]</script>
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="http://wx.qlogo.cn/mmopen/gFTv7sFnt1B2K3XeIib3yvnW73HqmFrlpYwibkQGYUrF9qj14I0Xvt0pjjm1pbRLx5dYQHcUkEQ9h6Z3x7Cl5NmjTupHxaUPMD/0">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">赖坤奇</h5>
+          <a href="mailto:781548819@qq.com" title="781548819@qq.com" class="mail">781548819@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/qq781548819" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">记录一次当Fragment遇上ScrollView碰撞后的火花</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">记录一次当Fragment遇上ScrollView碰撞后的火花</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-04-22T09:08:00.000Z" itemprop="datePublished" class="page-time">
+  2017-04-22
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+<article id="post-记录一次当Fragment遇上ScrollView碰撞后的火花"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">记录一次当Fragment遇上ScrollView碰撞后的火花</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-04-22 17:08:00" datetime="2017-04-22T09:08:00.000Z"  itemprop="datePublished">2017-04-22</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+            
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>最近做公司的跑腿项目，需要实现scrollView的滚动效果，印象中有弄过，直接使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">scrollView.smoothScrollTo(x,y);</div></pre></td></tr></table></figure>
+<p>就可以实现，而只要获取scrollView中子控件对应的父视图的相对位置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">childView.getTop();</div></pre></td></tr></table></figure></p>
+<p>即可，在Android中获取手机屏幕的高度和宽度，我们知道在onCreate等方法中获取到的值都是为0的。</p>
+<p>据官网api介绍：</p>
+<blockquote>
+<p>android API :</p>
+<p>void onWindowFocusChanged(boolean hasFocus) </p>
+<p>Called when the current Window of the activity gains or &gt;loses focus.</p>
+</blockquote>
+<p><strong>onWindowFocusChanged指的是这个Activity得到或者失去焦点的时候回调</strong></p>
+<p>直接拿来使用，测试成功在该回调下获得控件的位置等信息。</p>
+<p>动手干吧！在页面内使用onWindowFocusChanged，竟然没有提示，as怎么失效了!</p>
+<blockquote>
+<p>哦，我的View层是一个Fragment！！！<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1492863853500&di=add026d7c7011587e884aeabbbdf9f66&imgtype=0&src=http%3A%2F%2Fimg3.duitang.com%2Fuploads%2Fitem%2F201607%2F23%2F20160723114339_LAPaK.png" alt="卧槽" title="">
+                </div>
+                <div class="image-caption">卧槽</div>
+            </figure></p>
+</blockquote>
+<p>立马查了一下，发现Fragment没有该回调，那我怎么获取子控件的高度呢？</p>
+<p>直接上stackoverflow看到了这个问题：</p>
+<p><a href="http://http://stackoverflow.com/questions/30129984/how-to-get-the-onwindowfocuschanged-on-fragment" target="_blank" rel="external">how to get the onWindowFocusChanged on Fragment?</a></p>
+<p>总体解决方案如下：</p>
+<p>1.采用接口回调的方式：</p>
+<p>可以创建一个接口，让Fragment实现该接口，并在所依赖的onWindowFocusChanged得到当前Fragment，然后通过调用该<br>具体代码描述如下：</p>
+<p>定义一个简单的接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface IOnFocusListenable &#123;</div><div class="line">   public void onWindowFocusChanged(boolean hasFocus);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>让你的Fragment去实现该接口<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public class MyFragment implement IOnFocusListenable &#123;</div><div class="line">    ....</div><div class="line">    public void onWindowFocusChanged(boolean hasFocus) &#123;</div><div class="line">        ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在Activity中的onWindowFocusChanged把该回调传递过去<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public class MyActivity extends AppCompatActivity &#123;</div><div class="line">   @Override</div><div class="line">   public void onWindowFocusChanged(boolean hasFocus) &#123;</div><div class="line">        super.onWindowFocusChanged(hasFocus);</div><div class="line"></div><div class="line">        if(currentFragment instanceOf IOnFocusListenable) &#123;</div><div class="line">            ((IOnFocusListenable) currentFragment).onWindowFocusChanged(hasFocus);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>2.使用 ViewTreeObserver 提供的钩子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">    super.onCreate(savedInstanceState);</div><div class="line">    setContentView(R.layout.activity_welcome);</div><div class="line">    myButton = (Button) findViewById(R.id.button1);</div><div class="line">    </div><div class="line">    //向 ViewTreeObserver 注册方法，以获取控件尺寸</div><div class="line">    ViewTreeObserver viewTreeObserver = myButton.getViewTreeObserver();</div><div class="line">    viewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() &#123;</div><div class="line">        public void onGlobalLayout() &#123;</div><div class="line">            int h = myView.getTop();</div><div class="line">            Log.i(TAG, &quot;Height=&quot; + h); // 得到正确结果</div><div class="line"> </div><div class="line">            // 成功调用一次后，移除钩子，防止被反复调用</div><div class="line">            // removeGlobalOnLayoutListener() 方法在 API 16 后不再使用</div><div class="line">            // 使用新方法 removeOnGlobalLayoutListener() 代替</div><div class="line">            myView.getViewTreeObserver().removeGlobalOnLayoutListener(this);</div><div class="line">        &#125; </div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>3.使用view.post方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">ll_step_7.post(new Runnable() &#123;</div><div class="line">    @Override</div><div class="line">    public void run() &#123;</div><div class="line">        int h = ll_step_7.getTop();</div><div class="line">        main_content.smoothScrollBy(0,h);</div><div class="line">        Logger.i(&quot;Height:&quot;+h);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>最後：实现ScrollView的滚动还测试过一种方法直接滚动到底部：</p>
+<pre><code>scrollView.smoothScrollBy(0,h);
+main_content.post(new Runnable() {
+    @Override
+    public void run() {
+        main_content.fullScroll(View.FOCUS_DOWN);
+    }
+});
+</code></pre>
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2017-04-22T10:11:41.492Z" itemprop="dateUpdated">2017-04-22 18:11:41</time>
+</span><br>
+
+
+        这里写留言或版权声明：<a href="/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/" target="_blank" rel="external">http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/</a>
+    </div>
+    <footer>
+        <a href="http://yoursite.com">
+            <img src="http://wx.qlogo.cn/mmopen/gFTv7sFnt1B2K3XeIib3yvnW73HqmFrlpYwibkQGYUrF9qj14I0Xvt0pjjm1pbRLx5dYQHcUkEQ9h6Z3x7Cl5NmjTupHxaUPMD/0" alt="赖坤奇">
+            赖坤奇
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/android/">android</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/&title=《记录一次当Fragment遇上ScrollView碰撞后的火花》 — 闻道者|朝生夕死&pic=http://wx.qlogo.cn/mmopen/gFTv7sFnt1B2K3XeIib3yvnW73HqmFrlpYwibkQGYUrF9qj14I0Xvt0pjjm1pbRLx5dYQHcUkEQ9h6Z3x7Cl5NmjTupHxaUPMD/0" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/&title=《记录一次当Fragment遇上ScrollView碰撞后的火花》 — 闻道者|朝生夕死&source=碧血长枪，昨日少年！" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记录一次当Fragment遇上ScrollView碰撞后的火花》 — 闻道者|朝生夕死&url=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/04/13/Tinker微信热修复框架接入/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Tinker微信热修复框架接入</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+<div class="comments" id="comments">
+    <div class="ds-thread" data-thread-key="记录一次当Fragment遇上ScrollView碰撞后的火花" data-title="记录一次当Fragment遇上ScrollView碰撞后的火花" data-url="http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/"></div>
+</div>
+<script>
+lazyScripts.push('//cdn.bootcss.com/marked/0.3.6/marked.min.js');
+
+var duoshuoQuery = {short_name:'ysblog', theme: 'none'};
+lazyScripts.push('//unpkg.com/hexo-theme-material-indigo@1.6.1/js/embed.min.js');
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <ul class="reward-items">
+        
+        <li>
+            <img src="/img/wechat.png" title="微信打赏二维码" alt="微信打赏二维码">
+            <p>微信</p>
+        </li>
+        
+
+        
+        <li>
+            <img src="/img/alipay.jpg" title="支付宝打赏二维码" alt="支付宝打赏二维码">
+            <p>支付宝</p>
+        </li>
+        
+    </ul>
+</div>
+
+
+
+</div>
+
+        <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p>
+            <span>Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a></span>
+            <span>赖坤奇 &copy; 2017</span>
+			<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+	   </p>
+		
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/&title=《记录一次当Fragment遇上ScrollView碰撞后的火花》 — 闻道者|朝生夕死&pic=http://wx.qlogo.cn/mmopen/gFTv7sFnt1B2K3XeIib3yvnW73HqmFrlpYwibkQGYUrF9qj14I0Xvt0pjjm1pbRLx5dYQHcUkEQ9h6Z3x7Cl5NmjTupHxaUPMD/0" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/&title=《记录一次当Fragment遇上ScrollView碰撞后的火花》 — 闻道者|朝生夕死&source=碧血长枪，昨日少年！" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记录一次当Fragment遇上ScrollView碰撞后的火花》 — 闻道者|朝生夕死&url=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/&via=http://yoursite.com" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://yoursite.com/2017/04/22/记录一次当Fragment遇上ScrollView碰撞后的火花/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPYAAAD2CAAAAADAeSUUAAADI0lEQVR42u3aW27jQAwEwNz/0tkDBLa7SRlrjUtfi8SRpihgaT5+fuLr9+n195PJHfInPr9/crfhhY2NjX0TdkJKqMkdHj09OeGjcDw/58NAY2NjYx/HTh7WHmuTbJ6HPgnBi+diY2Njfz27LU7y1Pj8Ds/Pho2NjY29Z+fFRl5OtEkOGxsb+zvZbUto3wzalB95IXRBLw0bGxv749l5i+fz//2W+TY2Njb2B7N/yysJSluo7BtPtQIbGxv7IHZbVCRlQBKOvDhpA1ScHxsbG/sIdj5k3Xyr3wwGNqF8+ElsbGzsL2MnCawtD64qV4YDCWxsbOxD2flP/ldi2wQLGxsb+1T2DDZLHm0LKV/WGT4FGxsb+zh2vqyTlyVtgsyT1uzFYGNjY5/K3gxlZ82mfN1n/6qiggQbGxv7tuw8weRDhf3f7kuOF2fDxsbGPo49a+i0YcqHtXmzaRZubGxs7JPY+R+0X/qvWgOaBSVqLWFjY2N/DXtTYLyjFZUv/bw4OTY2Nvah7HagmxQkV7WK8iF0MSTAxsbGvjm7bdMnJUo+ym1TYJsaH34eGxsb+yB2XgZsjt6u5mzaTPlgAxsbG/sMdpIM2rZ7XpC0xUn7Juu8jY2NjX1Ddp4A2hDsS4j8bvnYABsbG/s89iYxbEqFGbXlRe8WGxsb++bs2YE2qzztYtBsWaewYGNjY9+cnTRxWkDeGGoD3b6MaLiLjY2NfQQ7+U8/aS3lpFlbql0Vepj2sLGxsQ9lt1/uZ3fIW0WbJ75Iq9jY2NgHsdvyI08eszRz1bChrsOwsbGxj2bPCoa81GnHulfdBxsbG/s8dr6gk/82ST9tEbIJymUwbGxs7Juw84SUNHeK9v3oPnnRgo2NjX0S+7e89mlj05yajYSj2gsbGxv7tux92ZAfcTPE3YyBV8kPGxsb+ybsdtXyqjQ2C9zzn+chwMbGxj6P/b6E9I61y3yh50UCw8bGxv5idhuCtomfN7na0GNjY2Njz4qHqwqeTUCxsbGxz2bnBUNeSMzaTy11NirAxsbGPok9KxJmazH7lZr2WavFHWxsbOxPZ/8DDEUMN2sJ+H0AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@1.6.1/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@1.6.1/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
